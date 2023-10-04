@@ -7,14 +7,14 @@ public class InstitutoTest {
     public static void main(String[] args) {
 
         try {
-            Profesor profesorCris = new Profesor("Cris", 31, "2.6", "Programación");
-            Profesor profesorLeo = new Profesor("Leo", 30, "2.6", "Empresa");
-            Profesor profesorIgnacio = new Profesor("Ignacio", 40, "2.6", "Inglés");
+            Profesor profesorRoberto = new Profesor("Roberto", 31, "2.6", "Lenguaje de Marcas");
+            Profesor profesorJuan = new Profesor("Juan", 30, "2.6", "Base de datos");
+            Profesor profesorMiguel = new Profesor("Miguel", 40, "2.6", "Programación");
 
             ArrayList<Profesor> listaProfesor = new ArrayList<Profesor>();
-            listaProfesor.add(profesorCris);
-            listaProfesor.add(profesorLeo);
-            listaProfesor.add(profesorIgnacio);
+            listaProfesor.add(profesorRoberto);
+            listaProfesor.add(profesorJuan);
+            listaProfesor.add(profesorMiguel);
 
             Alumno alumnoGabriel = new Alumno("Gabriel", 22, "2.6", 8);
             Alumno alumnoNicole = new Alumno("Nicole", 28, "2.6", 10);
@@ -31,7 +31,7 @@ public class InstitutoTest {
             System.out.println("Aula2.6 incluye= " + aula26);
 
         } catch (Exception e) { // une todos los catch
-            System.out.println("Error generico"+e);
+            System.out.println("Error generico");
         }
 
     }

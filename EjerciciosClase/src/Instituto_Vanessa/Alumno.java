@@ -1,6 +1,7 @@
 package Instituto_Vanessa;
 
 public class Alumno extends Persona{
+    
     /* Atributo */
     private int notas;
 
