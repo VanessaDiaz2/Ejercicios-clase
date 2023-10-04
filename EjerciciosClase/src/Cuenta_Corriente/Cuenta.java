@@ -6,6 +6,7 @@ public class Cuenta {
  
     private String dni;
     private String nombre;
+    private tipoCuenta tipoCuenta;
     private int numCuenta;
     private String numCuentaIBAN;
     private double saldo;
@@ -13,6 +14,8 @@ public class Cuenta {
     private static double importeMaximoIngresar = 6000;
     private LocalDateTime fechaIngresoHoy;
     private double dImporteIngresoHoy;
+    private LocalDateTime fechaRetirarHoy;
+    private double dImporteRetirarHoy;
     private static int contador = 0;
 
     public boolean ingresarDinero(double paramdCant) throws Exception {
@@ -22,14 +25,23 @@ public class Cuenta {
             this.saldo += paramdCant;
             bRes = true;
         } else {
-            throw new Exception("Superado el importe maximo");
+            throw new Exception("Superado el importe máximo a ingresar");
         }
-        return bRes;
+        
+        if(bRes){
+            System.out.println("Ingreso exitoso");
+            return true;
+        }else{
+            System.out.println("No se puede realizar el ingreso");
+            return false;
+        }
+
+        
     }
 
     private boolean puedoIngresarMasHoy(double paramdCant) {
         boolean bRes = false;
-        // si hoy todavia no ha habido ningún ingreso
+        // si hoy todavía no ha habido ningún ingreso
         if (this.dImporteIngresoHoy == 0) {
             // ponemos la fecha de ingreso a hoy
             this.fechaIngresoHoy = LocalDateTime.now();
@@ -62,6 +74,66 @@ public class Cuenta {
 
     }
 
+    public boolean retirarDinero(double paramdCant) throws Exception {
+        boolean bRes = false;
+        if(this.saldo > paramdCant){
+            if (puedoRetirarMasHoy(paramdCant)) {
+                this.dImporteRetirarHoy += paramdCant;
+                this.saldo -= paramdCant;
+                bRes = true;
+            } else {
+                throw new Exception("Superado el importe máximo a retirar");
+            }
+            
+            if(bRes){
+                System.out.println("Ingreso exitoso");
+                return true;
+            }else{
+                System.out.println("No se puede realizar el ingreso");
+                return false;
+            }
+        }else{
+            System.out.println("Saldo insuficiente");
+            return false;
+        }
+        
+    }
+
+    private boolean puedoRetirarMasHoy(double paramdCant) {
+        boolean bRes = false;
+        // si hoy todavía no ha habido ningún retiro
+        if (this.dImporteRetirarHoy == 0) {
+            // ponemos la fecha de retiro a hoy
+            this.fechaRetirarHoy = LocalDateTime.now();
+            if ((paramdCant < importeMaximoRetirar) && (paramdCant < this.saldo)){
+                bRes = true;
+            }
+        } // si ya ha habido más retiros
+        else {
+            // sigo en el mismo día
+            LocalDateTime fechaRetiroActual = LocalDateTime.now();
+            if (this.fechaRetirarHoy.getDayOfYear() == fechaRetiroActual.getDayOfYear()) {
+                // si lo acumulado + lo nuevo a retirar no supera el max retiro
+                if ((this.dImporteRetirarHoy + paramdCant) < importeMaximoRetirar) {
+                    bRes = true;
+                }
+
+            } else {
+                // nuevo día entonces --> inicializar fecha importe
+                this.fechaRetirarHoy = LocalDateTime.now();
+                dImporteRetirarHoy = 0;
+                if (paramdCant < importeMaximoRetirar) {
+                    bRes = true;
+                }
+            }
+        }
+
+        // ahora ya compruebo los importes
+
+        return bRes;
+
+    }
+
     public Cuenta(String dni, String nombre, int numCuenta, double saldo) {
         this.dni = dni;
         this.nombre = nombre;
@@ -69,6 +141,17 @@ public class Cuenta {
         this.saldo = saldo;
         this.fechaIngresoHoy = null;
         this.dImporteIngresoHoy = 0;
+        this.fechaRetirarHoy = null;
+        this.dImporteRetirarHoy = 0;
+    }
+
+    public Cuenta(int numCuenta, double saldo) {
+        this.numCuenta = numCuenta;
+        this.saldo = saldo;
+        this.fechaIngresoHoy = null;
+        this.dImporteIngresoHoy = 0;
+        this.fechaRetirarHoy = null;
+        this.dImporteRetirarHoy = 0;
     }
 
     public String getDni() {
@@ -116,32 +199,6 @@ public class Cuenta {
         return "Cuenta [dni=" + dni + ", nombre=" + nombre + ", numCuenta=" + numCuenta + ", saldo=" + saldo
                 + ", importeMaximoRetirar=" + importeMaximoRetirar + ", importeMaximoIngresar=" + importeMaximoIngresar
                 + "]";
-    }
-
-    // Métodos
-    public double ingresarDineroUno(double cantidad) {
-        if (cantidad > importeMaximoIngresar) {
-            System.out.println("El importe a ingresar es mayor al importe máximo permitido ");
-        } else {
-            this.saldo += cantidad;
-            System.out.println(" La operación se ha realizado de manera correcta.");
-        }
-
-        return saldo;
-    }
-
-    public double sacarDinero(double cantidad) {
-        if (cantidad > importeMaximoRetirar) {
-            System.out.println("El importe a retirar es mayor al importe máximo permitido ");
-        } else if (cantidad > saldo) {
-            System.out.println("El importe a retirar es mayor al su saldo actual ");
-        } else {
-            this.saldo -= cantidad;
-            System.out.println(" La operación se ha realizado de manera correcta.");
-        }
-
-        return saldo;
-
     }
 
     public void cambioTitular(String nuevoNombre, String dni) {
@@ -199,8 +256,7 @@ public class Cuenta {
 
                     valor1 = Integer.toString(num1);
                     valor2 = Integer.toString(num2);
-                    System.out.println("valor: " + num1);
-                    System.out.println("valor: " + num2);
+                    
                     comparar = valor1 + valor2;
 
                     String digitoControl = numeroCuenta.substring(12, 14);
@@ -221,6 +277,6 @@ public class Cuenta {
             return false;
         }
 
-    
     }
+    
 }
