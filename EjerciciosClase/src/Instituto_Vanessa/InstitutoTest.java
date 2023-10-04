@@ -31,7 +31,7 @@ public class InstitutoTest {
             System.out.println("Aula2.6 incluye= " + aula26);
 
         } catch (Exception e) { // une todos los catch
-            System.out.println("Error generico");
+            System.out.println("Error generico"+e);
         }
 
     }
